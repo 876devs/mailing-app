@@ -32,7 +32,7 @@ router.post('/emails', function(req, res){
             email.setFrom(process.env.REPLY_TO || "876devs@gmail.com");
             email.setText(req.body.body);
             email.setSubject(req.body.subject);
-            email.setFromName('Tremaine Buchanan');
+            email.setFromName('Mailing App');
 
         sendgrid.send(email, function(err, json){
                 if(err){

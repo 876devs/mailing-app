@@ -20,6 +20,7 @@ router.post('/email', function(req, res){
             email.setFrom(process.env.REPLY_TO || "876devs@gmail.com");
             email.setText('Testing 123');
             email.setSubject('From Mailing App');
+            email.setName('Tremaine Buchanan');
             sendgrid.send(email, function(err, json){
                 if(err) message = "Error Send Grid";
                 callback(message);

@@ -3,7 +3,8 @@
  */
 
 $(document).ready(function(){
-
+    $('#spinner').hide();
+    $('#send').prop('disabled', false);
     getClients = function(){
         var table = $('#clients');
         $.ajax({
@@ -81,6 +82,7 @@ $(document).ready(function(){
     client.info = {};
     client.name.parent().removeClass('has-error has-success');
     client.email.parent().removeClass('has-error has-success');
+      $('#subject').val('');$('#body').val('');
   };
 
   var submitClient = function(){
@@ -105,6 +107,69 @@ $(document).ready(function(){
       //getClients();
     var table = $('#clients');
     table.prepend('<tr><td>'+client.name+'</td><td>'+client.email+'</td><td>'+moment(client.created).format('MMMM Do YYYY, h:mm:ss a')+'</td></tr>');
-  }
+  };
+    /**
+     * Handle email form
+     */
+    $('#send').click(function(event){
+        event.preventDefault();
+        var email = {};
+        email.subject = $('#subject').val();
+        email.body = $('#body').val();
+        $('#spinner').show();
+        $(this).prop('disabled', true);
+        submitEmail(email);
+    });
+
+    var submitEmail = function(email){
+        $.ajax({
+           url: '/emails',
+            type: 'POST',
+            data: email,
+            success: function(data){
+                pristine();
+                showMessage('success');
+            },
+            error: function(error){
+                showMessage('error');
+            }
+        });
+        $('#send').prop('disabled', false);
+        $('#spinner').hide();
+    };
+
+    var showMessage = function(type){
+        var alertDiv = $('#message'),
+            site_message = $('#site-message')
+            alert_btn = $('<button>').attr({ 'type': 'button',
+                                            'data-dismiss' :'alert',
+                                            'aria-label': 'Close'}).addClass('close');
+            alert_btn_span = $('<span>').attr({'aria-hidden': 'true'}).html('&times');
+            alert_btn.append(alert_btn_span);
+        switch(type){
+            case 'success': alertDiv
+                                .addClass('alert alert-success alert-dismissable')
+                                .attr('role', 'alert')
+                                .html('<strong>Success!</strong> Emails successfully processed.')
+                                .append(alert_btn)
+                                .show();
+                break;
+            case 'error' : alertDiv
+                                .addClass('alert alert-danger alert-dismissable')
+                                .attr('role', 'alert')
+                                .html('<strong>Whoops!</strong>. Something went wrong will sending your email')
+                                .append(alert_btn)
+                                .show();
+                break;
+            case 'complete': site_message
+                                .addClass('alert alert-info alert-dismissable')
+                                .attr('role', 'alert')
+                                .html('<strong>All emails have been successfully sent.</strong>')
+                                .append(alert_btn)
+                                .show();
+                break;
+            default: console.error('Error has occurred');
+        };
+    }
 });
 

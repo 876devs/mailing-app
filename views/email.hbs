@@ -1,0 +1,27 @@
+<div class="container">
+	<div class="header clearfix">
+		<nav>
+			<ul class="nav nav-pills pull-right">
+				<li role="presentation"><a href="/">Clients</a></li>
+				<li role="presentation"><a href="/send">Send Email</a></li>
+			</ul>
+		</nav>
+		<h3 class="text-muted">Mailing List App</h3>
+	</div>
+	<div id="message"></div>
+	<form>
+		<div class="form-group">
+			<label for="subject">Subject</label>
+			<input class="form-control" id="subject" placeholder="Fantastic Day">
+		</div>
+
+		<div class="form-group">
+			<label for="body">Body</label>
+			<textarea maxlength="5000" placeholder="Say Something" id="body" class="form-control"></textarea>
+		</div>
+
+		<i class="fa fa-circle-o-notch fa-spin" id="spinner"></i>
+		<button type="button" id="send" class="btn btn-success">Send to Subscribers</button>
+		<button type="reset" class="btn btn-default">Cancel</button>
+	</form>
+</div>

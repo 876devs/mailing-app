@@ -11,12 +11,12 @@ var async_ = require('async');
  * Retrieves each client from the database and send
  * each client an email.
  */
-router.post('/email', function(req, res){
-    var message = "", addresses = [];
+router.post('/emails', function(req, res){
+    var message = {}, addresses = [];
     async_.waterfall([
         function(callback){
             Client.find().exec(function(err, clients){
-                if(err) message = "Error in retrieving clients";
+                if(err) message.text = "Error in retrieving clients";
 
                 callback(null,clients)
             });
@@ -30,16 +30,25 @@ router.post('/email', function(req, res){
         var email = new sendgrid.Email();
         email.setSmtpapiTos(addresses);
             email.setFrom(process.env.REPLY_TO || "876devs@gmail.com");
-            email.setText('this is it!!!');
-            email.setSubject('No Limit');
+            email.setText(req.body.body);
+            email.setSubject(req.body.subject);
             email.setFromName('Tremaine Buchanan');
 
         sendgrid.send(email, function(err, json){
-                if(err) message = "Error Send Grid";
-
-                res.json(json);
+                if(err){
+                    message.text = "Error Send Grid";
+                } else{
+                    message.text = "Emails sent successfully";
+                    res.json(message);
+                }
         });
     });
+});
+/**
+ * Renders the email form
+ */
+router.get('/send', function(req, res){
+   res.render('email');
 });
 
 module.exports = router;

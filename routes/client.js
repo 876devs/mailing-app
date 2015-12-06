@@ -7,7 +7,7 @@ var Client = require('../models/client');
  * the database.
  */
 router.get('/clients', function(req, res) {
- 	Client.find().exec(function(err, clients){
+ 	Client.find().sort('-created').exec(function(err, clients){
 		if(err) res.json('Something went wrong');
 		res.json(clients);
 	});

@@ -1,0 +1,23 @@
+{
+  "name": "mailing-app",
+  "version": "1",
+  "homepage": "https://github.com/876devs/mailing-app",
+  "authors": [
+    "tremainebuchanan <tremainekbuchanan@gmail.com>"
+  ],
+  "description": "Mailing list app",
+  "main": "app.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "moment": "~2.10.6"
+  }
+}

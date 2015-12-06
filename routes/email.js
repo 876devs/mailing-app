@@ -8,29 +8,38 @@ var Client = require('../models/client');
 var async_ = require('async');
 
 /**
- * Creates a client from the request body.
+ * Retrieves each client from the database and send
+ * each client an email.
  */
 router.post('/email', function(req, res){
-    var email = new sendgrid.Email(),
-        message = "";
-    Client.find().exec(function(err, clients){
-       if(err) message = "Error Occurred Client";
-        async_.each(clients, function(client, callback){
-            email.addTo(client.email);
+    var message = "", addresses = [];
+    async_.waterfall([
+        function(callback){
+            Client.find().exec(function(err, clients){
+                if(err) message = "Error in retrieving clients";
+
+                callback(null,clients)
+            });
+        }, function(clients, callback){
+             clients.forEach(function(client){
+                addresses.push(client.email);
+               });
+            callback(null, addresses);
+        }
+    ], function(err,addresses){
+        var email = new sendgrid.Email();
+        email.setSmtpapiTos(addresses);
             email.setFrom(process.env.REPLY_TO || "876devs@gmail.com");
-            email.setText('Testing 123');
-            email.setSubject('From Mailing App');
+            email.setText('this is it!!!');
+            email.setSubject('No Limit');
             email.setFromName('Tremaine Buchanan');
-            sendgrid.send(email, function(err, json){
+
+        sendgrid.send(email, function(err, json){
                 if(err) message = "Error Send Grid";
-                callback(message);
-            })
-        }, function(err,message){
-            message = "All went well";
-            res.json({message: message});
+
+                res.json(json);
         });
     });
-
 });
 
 module.exports = router;
